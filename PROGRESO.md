@@ -15,17 +15,14 @@
 - [x] Slider de opacidad
 - [x] Botón reset (restaurar transformaciones)
 - [x] Botón quitar imagen
-- [ ] Probar en dispositivo físico
+- [x] Probar en dispositivo físico
 
 ## Mejoras pendientes (por prioridad)
 
 1. [x] Bloquear imagen en posición (toggle 🔒 para evitar moverla por accidente)
 2. [x] Modo pantalla limpia (ocultar controles para dibujar sin estorbos)
 3. [x] Invertir/voltear imagen (espejo horizontal/vertical)
-4. [ ] Guardar captura de pantalla (cámara + overlay)
-5. [ ] Múltiples imágenes superpuestas
-6. [ ] Historial de imágenes recientes
-7. [ ] Ajuste de perspectiva por esquinas (perspective warp para adaptar imagen a superficies)
+4. [x] Ajuste de perspectiva por esquinas (perspective warp para adaptar imagen a superficies)
 
 ## Deuda técnica
 
@@ -37,9 +34,9 @@
 - [x] Proyecto Xcode (.xcodeproj)
 - [x] Info.plist con permiso de cámara
 - [x] Assets catalog
-- [ ] Ícono de la app
-- [ ] Configurar signing con Apple ID
-- [ ] Launch screen personalizada
+- [x] Ícono de la app
+- [x] Configurar signing con Apple ID
+- [ ] Launch screen personalizada (pospuesta)
 - [x] Resolver deuda técnica de CameraView
 
 ## Documentación
@@ -50,6 +47,12 @@
 ---
 
 ## Registro de cambios
+
+### v0.3 — Modo perspectiva
+- Nuevo archivo `PerspectiveOverlay.swift` con transformación de perspectiva (homografía 8x8)
+- Botón para alternar entre modo normal (drag/pinch/rotate) y modo perspectiva (4 esquinas arrastrables)
+- El slider de opacidad sigue funcionando en modo perspectiva
+- Reset restaura también el modo perspectiva
 
 ### v0.2 — Mejoras de UX
 - Bloqueo de imagen (toggle 🔒) para evitar moverla por accidente

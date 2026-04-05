@@ -13,6 +13,11 @@ struct ContentView: View {
     @State private var flipH = false
     @State private var flipV = false
     @State private var lensIndex = 0
+    @State private var perspectiveMode = false
+    @State private var pTL = CGPoint.zero
+    @State private var pTR = CGPoint.zero
+    @State private var pBL = CGPoint.zero
+    @State private var pBR = CGPoint.zero
 
     // Gesture state
     @State private var lastScale: CGFloat = 1.0
@@ -24,15 +29,28 @@ struct ContentView: View {
             CameraView(lensIndex: $lensIndex).ignoresSafeArea()
 
             if let img = overlayImage {
-                Image(uiImage: img)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 250)
-                    .opacity(opacity)
-                    .scaleEffect(x: flipH ? -scale : scale, y: flipV ? -scale : scale)
-                    .rotationEffect(rotation)
-                    .offset(offset)
-                    .gesture(isLocked ? nil : dragGesture.simultaneously(with: magnifyGesture).simultaneously(with: rotateGesture))
+                if perspectiveMode {
+                    GeometryReader { geo in
+                        PerspectiveOverlay(
+                            image: img, opacity: opacity,
+                            frameSize: CGSize(width: 250, height: 250 * (img.size.height / max(img.size.width, 1))),
+                            topLeft: $pTL, topRight: $pTR,
+                            bottomLeft: $pBL, bottomRight: $pBR
+                        )
+                        .onAppear { initCorners(in: geo.size, imgSize: img.size) }
+                    }
+                    .ignoresSafeArea()
+                } else {
+                    Image(uiImage: img)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 250)
+                        .opacity(opacity)
+                        .scaleEffect(x: flipH ? -scale : scale, y: flipV ? -scale : scale)
+                        .rotationEffect(rotation)
+                        .offset(offset)
+                        .gesture(isLocked ? nil : dragGesture.simultaneously(with: magnifyGesture).simultaneously(with: rotateGesture))
+                }
             }
 
             // Botón para mostrar/ocultar controles
@@ -98,6 +116,10 @@ struct ContentView: View {
                         Image(systemName: "arrow.up.and.down.righttriangle.up.righttriangle.down")
                     }
                     .disabled(isLocked)
+                    Button { togglePerspective() } label: {
+                        Image(systemName: perspectiveMode ? "rectangle.fill" : "rectangle.and.hand.point.up.left")
+                    }
+                    .disabled(isLocked)
                     Button { overlayImage = nil } label: {
                         Image(systemName: "xmark.circle")
                     }
@@ -136,6 +158,23 @@ struct ContentView: View {
         rotation = .zero; lastRotation = .zero
         opacity = 0.5
         isLocked = false; flipH = false; flipV = false
+        perspectiveMode = false
+    }
+
+    private func togglePerspective() {
+        perspectiveMode.toggle()
+    }
+
+    private func initCorners(in screen: CGSize, imgSize: CGSize) {
+        let w: CGFloat = 250
+        let h = w * (imgSize.height / max(imgSize.width, 1))
+        let cx = screen.width / 2, cy = screen.height / 2
+        if pTL == .zero && pTR == .zero {
+            pTL = CGPoint(x: cx - w/2, y: cy - h/2)
+            pTR = CGPoint(x: cx + w/2, y: cy - h/2)
+            pBL = CGPoint(x: cx - w/2, y: cy + h/2)
+            pBR = CGPoint(x: cx + w/2, y: cy + h/2)
+        }
     }
 
     private var cameras: [AVCaptureDevice] {

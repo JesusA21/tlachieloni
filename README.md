@@ -12,6 +12,7 @@ App para iPhone que superpone imágenes de referencia sobre la cámara en vivo, 
 - **Slider de opacidad** de 0% a 100%
 - **Botón Reset** para volver a la posición original
 - **Botón Quitar** para eliminar la imagen superpuesta
+- **Modo perspectiva** con 4 esquinas arrastrables para adaptar la imagen a superficies
 
 ## Requisitos
 
@@ -28,6 +29,7 @@ App para iPhone que superpone imágenes de referencia sobre la cámara en vivo, 
 | `CameraView.swift` | Feed en vivo de la cámara trasera usando AVFoundation |
 | `ImagePicker.swift` | Selector de imágenes del álbum de fotos |
 | `ContentView.swift` | Vista principal con imagen superpuesta y controles |
+| `PerspectiveOverlay.swift` | Modo perspectiva con 4 esquinas arrastrables |
 | `Info.plist` | Permiso de cámara |
 
 ## Cómo abrir y correr
