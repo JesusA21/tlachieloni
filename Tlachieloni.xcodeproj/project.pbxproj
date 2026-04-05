@@ -13,6 +13,7 @@
 		A1000004 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000004 /* ImagePicker.swift */; };
 		A1000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000005 /* Assets.xcassets */; };
 		A1000006 /* PerspectiveOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000007 /* PerspectiveOverlay.swift */; };
+		A1000007 /* AROverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000008 /* AROverlayView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		A2000005 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2000006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2000007 /* PerspectiveOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerspectiveOverlay.swift; sourceTree = "<group>"; };
+		A2000008 /* AROverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AROverlayView.swift; sourceTree = "<group>"; };
 		A2000010 /* Tlachieloni.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tlachieloni.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -43,6 +45,7 @@
 				A2000003 /* CameraView.swift */,
 				A2000004 /* ImagePicker.swift */,
 				A2000007 /* PerspectiveOverlay.swift */,
+				A2000008 /* AROverlayView.swift */,
 				A2000005 /* Assets.xcassets */,
 				A2000006 /* Info.plist */,
 			);
@@ -125,6 +128,7 @@
 				A1000003 /* CameraView.swift in Sources */,
 				A1000004 /* ImagePicker.swift in Sources */,
 				A1000006 /* PerspectiveOverlay.swift in Sources */,
+				A1000007 /* AROverlayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

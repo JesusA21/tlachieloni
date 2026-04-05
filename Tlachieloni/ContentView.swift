@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var flipV = false
     @State private var lensIndex = 0
     @State private var perspectiveMode = false
+    @State private var arMode = false
     @State private var pTL = CGPoint.zero
     @State private var pTR = CGPoint.zero
     @State private var pBL = CGPoint.zero
@@ -26,30 +27,34 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            CameraView(lensIndex: $lensIndex).ignoresSafeArea()
+            if arMode, let img = overlayImage {
+                AROverlayView(image: img, opacity: opacity).ignoresSafeArea()
+            } else {
+                CameraView(lensIndex: $lensIndex).ignoresSafeArea()
 
-            if let img = overlayImage {
-                if perspectiveMode {
-                    GeometryReader { geo in
-                        PerspectiveOverlay(
-                            image: img, opacity: opacity,
-                            frameSize: CGSize(width: 250, height: 250 * (img.size.height / max(img.size.width, 1))),
-                            topLeft: $pTL, topRight: $pTR,
-                            bottomLeft: $pBL, bottomRight: $pBR
-                        )
-                        .onAppear { initCorners(in: geo.size, imgSize: img.size) }
+                if let img = overlayImage {
+                    if perspectiveMode {
+                        GeometryReader { geo in
+                            PerspectiveOverlay(
+                                image: img, opacity: opacity,
+                                frameSize: CGSize(width: 250, height: 250 * (img.size.height / max(img.size.width, 1))),
+                                topLeft: $pTL, topRight: $pTR,
+                                bottomLeft: $pBL, bottomRight: $pBR
+                            )
+                            .onAppear { initCorners(in: geo.size, imgSize: img.size) }
+                        }
+                        .ignoresSafeArea()
+                    } else {
+                        Image(uiImage: img)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 250)
+                            .opacity(opacity)
+                            .scaleEffect(x: flipH ? -scale : scale, y: flipV ? -scale : scale)
+                            .rotationEffect(rotation)
+                            .offset(offset)
+                            .gesture(isLocked ? nil : dragGesture.simultaneously(with: magnifyGesture).simultaneously(with: rotateGesture))
                     }
-                    .ignoresSafeArea()
-                } else {
-                    Image(uiImage: img)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 250)
-                        .opacity(opacity)
-                        .scaleEffect(x: flipH ? -scale : scale, y: flipV ? -scale : scale)
-                        .rotationEffect(rotation)
-                        .offset(offset)
-                        .gesture(isLocked ? nil : dragGesture.simultaneously(with: magnifyGesture).simultaneously(with: rotateGesture))
                 }
             }
 
@@ -116,8 +121,19 @@ struct ContentView: View {
                         Image(systemName: "arrow.up.and.down.righttriangle.up.righttriangle.down")
                     }
                     .disabled(isLocked)
+                }
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.black.opacity(0.6))
+
+            if overlayImage != nil {
+                HStack(spacing: 20) {
                     Button { togglePerspective() } label: {
                         Image(systemName: perspectiveMode ? "rectangle.fill" : "rectangle.and.hand.point.up.left")
+                    }
+                    .disabled(isLocked || arMode)
+                    Button { arMode.toggle(); if arMode { perspectiveMode = false } } label: {
+                        Image(systemName: arMode ? "arkit" : "cube.transparent")
                     }
                     .disabled(isLocked)
                     Button { overlayImage = nil } label: {
@@ -125,9 +141,9 @@ struct ContentView: View {
                     }
                     .disabled(isLocked)
                 }
+                .buttonStyle(.borderedProminent)
+                .tint(.black.opacity(0.6))
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.black.opacity(0.6))
         }
         .padding()
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
@@ -158,7 +174,7 @@ struct ContentView: View {
         rotation = .zero; lastRotation = .zero
         opacity = 0.5
         isLocked = false; flipH = false; flipV = false
-        perspectiveMode = false
+        perspectiveMode = false; arMode = false
     }
 
     private func togglePerspective() {
